@@ -1,0 +1,316 @@
+<!--<!doctype html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo app</title>
+    <link rel="stylesheet" th:href="@{/webjars/todomvc-common/base.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/todomvc-app-css/index.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+</head>
+
+<body>
+<section
+        class="todoapp"
+>
+    <header class="header">
+        <h1>todos</h1>
+        <input
+                id="new-todo-input"
+                class="new-todo"
+                placeholder="What needs to be done?"
+                autofocus
+                th:field="*{item.title}"
+                hx-target="#todo-list"
+                hx-swap="beforeend"
+                hx-post="/"
+                hx-trigger="keyup[key=='Enter']"
+        />
+    </header>
+    <section
+            id="main-section"
+            class="main"
+            th:classappend="${! someItemsPresent ? 'hidden' : ''}"
+    >
+        <input id="toggle-all" class="toggle-all" type="checkbox"/>
+        <label for="toggle-all">Mark all completed</label>
+        <ul
+                class="todo-list"
+                id="todo-list"
+        >
+            <li th:insert="frag_todo :: frag_todo(${item})"
+                th:each="item : ${todos}"
+                th:remove="tag"
+            >
+            </li>
+            <li th:insert="frag_todo :: frag_todo(${item})"
+                th:each="item : ${todos}"
+                th:remove="tag">
+                <div>
+                    <p>Time spent: <span class="time-spent">0</span> seconds</p>
+                </div>
+            </li>
+
+        </ul>
+    </section>
+
+    <footer
+            id="actions-footer"
+            class="footer"
+            th:classappend="${! someItemsPresent ? 'hidden' : ''}"
+    >
+        <div
+                th:replace="frag_count :: active_item_count()"
+        >
+        </div>
+        <div
+                th:insert="frag_filters :: frag_filters(${listFilter})"
+                th:remove="tag">
+        </div>
+
+        <form
+                th:action="@{/completed}"
+                th:method="delete"
+                th:if="${someCompletedTodosPresent}"
+        >
+            <button
+                    class="clear-completed"
+            >
+                Clear completed
+            </button>
+        </form>
+    </footer>
+</section>
+
+<footer class="info">
+    <p>Double click to edit a todo</p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+<script>
+    htmx.on("#new-todo-input", 'htmx:afterRequest', function (evt) {
+        evt.detail.elt.value = '';
+    });
+
+    // add main section if item is added for first time
+    htmx.on('htmx:afterSwap', function (evt) {
+        console.log('htmx after swap. event is', evt);
+        const items = document.querySelectorAll('#todo-list li');
+        const mainSection = document.querySelector('#main-section');
+        const actionsFooter = document.querySelector('#actions-footer');
+        if (items.length === 0) {
+            mainSection.classList.add('hidden');
+            actionsFooter.classList.add('hidden');
+        } else {
+            mainSection.classList.remove('hidden');
+            actionsFooter.classList.remove('hidden');
+        }
+        trackTimeSpent();
+    })
+    function trackTimeSpent() {
+        const items = document.querySelectorAll('#todo-list li');
+        items.forEach((item) => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            const timeSpent = item.querySelector('.time-spent');
+            let startTime = null;
+            let endTime = null;
+
+        checkbox.addEventListener('click', function () {
+            if (checkbox.checked) {
+                startTime = Date.now();
+            } else {
+                endTime = Date.now();
+                const timeDiff = (endTime - startTime) / 1000;
+                timeSpent.innerText = timeDiff;
+            }
+        });
+    });
+}
+</script>
+</body>
+</html>-->
+
+<!doctype html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo app</title>
+    <link rel="stylesheet" th:href="@{/webjars/todomvc-common/base.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/todomvc-app-css/index.css}">
+</head>
+
+<body>
+<section
+        class="todoapp"
+>
+    <header class="header">
+        <h1>todos</h1>
+        <input
+                id="new-todo-input"
+                class="new-todo"
+                placeholder="What needs to be done?"
+                autofocus
+                th:field="*{item.title}"
+                hx-target="#todo-list"
+                hx-swap="beforeend"
+                hx-post="/"
+                hx-trigger="keyup[key=='Enter']"
+        />
+    </header>
+    <section
+            id="main-section"
+            class="main"
+            th:classappend="${! someItemsPresent ? 'hidden' : ''}"
+    >
+        <input id="toggle-all" class="toggle-all" type="checkbox"/>
+        <label for="toggle-all">Mark all completed</label>
+        <ul class="todo-list" id="todo-list">
+          <li>
+            <input id="item-checkbox" type="checkbox" />
+            <label for="item-checkbox">Todo item</label>
+            <p>Time spent: <span id="time-spent">0</span> seconds</p>
+          </li>
+        <ul
+                class="todo-list"
+                id="todo-list"
+        >
+            <li th:insert="frag_todo :: frag_todo(${item})"
+                th:each="item : ${todos}"
+                th:remove="tag">
+                
+                
+            </li>
+        </ul>
+    </section>
+
+    <footer
+            id="actions-footer"
+            class="footer"
+            th:classappend="${! someItemsPresent ? 'hidden' : ''}"
+    >
+        <div
+                th:replace="frag_count :: active_item_count()"
+        >
+        </div>
+        <div
+                th:insert="frag_filters :: frag_filters(${listFilter})"
+                th:remove="tag">
+        </div>
+
+        <form
+                th:action="@{/completed}"
+                th:method="delete"
+                th:if="${someCompletedTodosPresent}"
+        >
+            <button
+                    class="clear-completed"
+            >
+                Clear completed
+            </button>
+        </form>
+    </footer>
+</section>
+
+<footer class="info">
+    <p>Double click to edit a todo</p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+<script>
+    htmx.on("#new-todo-input", 'htmx:afterRequest', function (evt) {
+        evt.detail.elt.value = '';
+    });
+
+    // add main section if item is added for first time
+    htmx.on('htmx:afterSwap', function (evt) {
+        console.log('htmx after swap. event is', evt);
+        const items = document.querySelectorAll('#todo-list li');
+        const mainSection = document.querySelector('#main-section');
+        const actionsFooter = document.querySelector('#actions-footer');
+        if (items.length === 0) {
+            mainSection.classList.add('hidden');
+            actionsFooter.classList.add('hidden');
+        } else {
+            mainSection.classList.remove('hidden');
+            actionsFooter.classList.remove('hidden');
+        }
+    })
+</script>
+<script>
+    /*function trackTimeSpent() {
+      const items = document.querySelectorAll('#todo-list li');
+      items.forEach((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const timeSpent = item.querySelector('#time-spent');
+        let startTime = null;
+        let endTime = null;
+
+        checkbox.addEventListener('click', function () {
+          if (checkbox.checked) {
+            startTime = Date.now();
+          } else {
+            endTime = Date.now();
+            const timeDiff = (endTime - startTime) / 1000;
+            timeSpent.innerText = timeDiff;
+          }
+        });
+      });
+    }*/
+
+    function trackTimeSpent() {
+        const items = document.querySelectorAll('#todo-list li');
+        items.forEach((item) => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          const timeSpent = item.querySelector('#time-spent');
+          let startTime = null;
+          let endTime = null;
+      
+          checkbox.addEventListener('click', function () {
+            if (checkbox.checked) {
+              startTime = Date.now();
+            } else {
+              endTime = Date.now();
+              const timeDiff = (endTime - startTime) / 1000;
+              const timeDiffInHours = timeDiff / 3600; // timeDiff in hours
+              timeSpent.innerText = timeDiff;
+      
+              // send time spent to server
+              const itemId = item.dataset.itemId;
+              fetch('http://localhost:8081', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ timeSpent: timeDiff })
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log(data);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+            }
+          });
+        });
+      }
+    const newTodoInput = document.querySelector('#new-todo-input');
+      newTodoInput.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+          const newItem = document.querySelector('#todo-list li:last-child');
+          newItem.setAttribute('data-created-at', new Date()); // set the created time for the new item
+          calculateTimeSpent(newItem); // calculate the time spent for the new item
+        }
+      });
+    trackTimeSpent();
+</script>
+
+</body>
+</html>

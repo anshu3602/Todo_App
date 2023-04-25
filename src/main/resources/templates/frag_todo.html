@@ -1,0 +1,27 @@
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+<li
+        th:fragment="frag_todo(item)"
+        th:classappend="${item.isCompleted ? 'completed' : '' }"
+        th:id="|list-item-${item.id}|"
+>
+    <div class="view">
+        <input
+                th:id="|toggle-checkbox-${item.id}|"
+                class="toggle"
+                type="checkbox"
+                th:attrappend="checked=${item.isCompleted ? true : null }"
+                th:attr="hx-put=@{/{id}/toggle(id=${item.id})} , hx-target=|#list-item-${item.id}|"
+                hx-trigger="click"
+                hx-swap="outerHTML"
+        >
+        <label th:text="${item.title}"></label>
+        <div
+                th:insert="frag_todo_delete :: frag_todo_del(${item})"
+                th:remove="tag"
+        ></div>
+    </div>
+</li>
+</html>
